@@ -1,26 +1,19 @@
 using AngleSharp;
 using AngleSharp.Html.Dom;
 using System.Drawing;
+using CommandLine;
 
 namespace KeepMd;
 
 public class NoteConvert
 {
-    // public static async Task KeepToMd(Options options)
-    // {
-    //     string keepHtml = string.Join("", System.IO.File.ReadAllLines(inputFilePath));
-    // }
     public static async Task KeepArchieveToObsidianMd(
         string inputFilePath,
         string fileName,
-        string outputDirectory
+        Options options
     )
     {
         #region ReadHtml
-        // string filePath = @"C:\Users\mokay\Source\Repos\Keep-to-ObsidianMd\12 29 2015.html";
-        // string filePath = @"C:\Users\mokay\Source\Repos\Keep-to-ObsidianMd\To Do List(1).html";
-        // string filePath =
-        //     @"C:\Users\mokay\Source\Repos\Keep-to-ObsidianMd\Sir Francis Drake (English, 1540-1595).html";
 
         string keepHtml = string.Join("", System.IO.File.ReadAllLines(inputFilePath));
         #endregion
@@ -34,11 +27,6 @@ public class NoteConvert
         #region Turn to Md
         List<string> outPutLines = new();
         #endregion
-
-        // #region  Create fileName
-        // string fileName = doc?.Title?.Replace(":", "_") ?? "Untitled";
-        // Console.WriteLine(fileName);
-        // #endregion
 
         #region Set title
         if (doc?.Title != null)
@@ -87,7 +75,7 @@ public class NoteConvert
                     {
                         image = Image.FromStream(ms);
                         image.Save(
-                            $@"C:\Users\mokay\Source\Repos\Keep-to-ObsidianMd\output\{outputDirectory}\{fileName}-img{counter}.jpg"
+                            $@"C:\Users\mokay\Source\Repos\Keep-to-ObsidianMd\output\{options.DestFilePath}\{fileName}-img{counter}.jpg"
                         );
                         outPutLines.Add($"![[{fileName}-img{counter}.jpg]]");
                         counter++;
@@ -99,10 +87,10 @@ public class NoteConvert
         #endregion
 
         #region Create file
-        string outputFilePath = $@"{outputDirectory}\{fileName}.md";
-        // $@"C:\Users\mokay\Source\Repos\Keep-to-ObsidianMd\output\{outputDirectory}\{fileName}.md";
+        string outputFilePath = $@"{options.DestFilePath}\{fileName}.md";
+        if (!Directory.Exists(options.DestFilePath))
+            Directory.CreateDirectory(options.DestFilePath ?? @$".\KeepArchive");
         File.WriteAllLines(outputFilePath, outPutLines);
-        // File.SetCreationTime(outputFilePath, new DateTime(""));
         #endregion
     }
 }
