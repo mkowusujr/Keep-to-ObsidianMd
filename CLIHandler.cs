@@ -1,41 +1,48 @@
-using System;
-using System.IO;
 using System.IO.Compression;
 
 namespace KeepMd;
 
-static class CLIHandler {
-    public static void HandleCLIOptions(Options options) {
-        string targetPath = ExtractKeepZipArchieve(@$".\{options.SrcFilePath}");
-        string[] fileEntries = Directory
-                                .GetFiles(targetPath)
-                                .Where(file => file.Contains(".html"))
-                                .ToArray();
+static class CLIHandler
+{
+	public static async Task HandleCLIOptions(Options options)
+	{
+		string targetPath = ExtractKeepZipArchieve(@$".\{options.SrcFilePath}");
 
-        options.DestFilePath = options.DestFilePath == null ?  
-                                    @$".\" 
-                                    : 
-                                    @$".\{options.DestFilePath}";
+		options.DestFilePath =
+			options.DestFilePath == null ? @$".\KeepArchive" : @$".\{options.DestFilePath}";
 
-        Console.WriteLine(targetPath);
-        Console.WriteLine(options.DestFilePath);
-    }
+		string[] fileEntries = Directory
+			.GetFiles(targetPath)
+			.Where(file => file.Contains(".html"))
+			.ToArray();
 
-    private static string ExtractKeepZipArchieve(string zipPath){
-        string extractPath = GetTemporaryDirectory();
-        
-        using (var file = File.OpenRead(zipPath)) {
-            using (var keepZipArchive = new ZipArchive(file, ZipArchiveMode.Read)) {
-                keepZipArchive.ExtractToDirectory(extractPath);
-            }
-        }
+		foreach (string filepath in fileEntries)
+		{
+			Console.WriteLine(filepath);
+			var filename = filepath.Split("\\").Last().Replace(".html", string.Empty);
+			await NoteConvert.KeepArchieveToObsidianMd(filepath, filename, options.DestFilePath);
+		}
+	}
 
-        return Path.Combine(extractPath, "Takeout");
-    }
+	private static string ExtractKeepZipArchieve(string zipPath)
+	{
+		string extractPath = GetTemporaryDirectory();
 
-    private static string GetTemporaryDirectory() {
-        string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-        Directory.CreateDirectory(tempDirectory);
-        return tempDirectory;
-    }
+		using (var file = File.OpenRead(zipPath))
+		{
+			using (var keepZipArchive = new ZipArchive(file, ZipArchiveMode.Read))
+			{
+				keepZipArchive.ExtractToDirectory(extractPath);
+			}
+		}
+
+		return Path.Combine(extractPath, @"Takeout\Keep");
+	}
+
+	private static string GetTemporaryDirectory()
+	{
+		string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+		Directory.CreateDirectory(tempDirectory);
+		return tempDirectory;
+	}
 }

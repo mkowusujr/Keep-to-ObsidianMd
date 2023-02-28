@@ -1,11 +1,20 @@
-using System;
 using AngleSharp;
 using AngleSharp.Html.Dom;
 using System.Drawing;
 
+namespace KeepMd;
+
 public class NoteConvert
 {
-    public static async Task KeepArchieveToObsidianMd(string inputFilePath, string fileName, string outputDirectory)
+    // public static async Task KeepToMd(Options options)
+    // {
+    //     string keepHtml = string.Join("", System.IO.File.ReadAllLines(inputFilePath));
+    // }
+    public static async Task KeepArchieveToObsidianMd(
+        string inputFilePath,
+        string fileName,
+        string outputDirectory
+    )
     {
         #region ReadHtml
         // string filePath = @"C:\Users\mokay\Source\Repos\Keep-to-ObsidianMd\12 29 2015.html";
@@ -90,8 +99,8 @@ public class NoteConvert
         #endregion
 
         #region Create file
-        string outputFilePath =
-            $@"C:\Users\mokay\Source\Repos\Keep-to-ObsidianMd\output\{outputDirectory}\{fileName}.md";
+        string outputFilePath = $@"{outputDirectory}\{fileName}.md";
+        // $@"C:\Users\mokay\Source\Repos\Keep-to-ObsidianMd\output\{outputDirectory}\{fileName}.md";
         File.WriteAllLines(outputFilePath, outPutLines);
         // File.SetCreationTime(outputFilePath, new DateTime(""));
         #endregion

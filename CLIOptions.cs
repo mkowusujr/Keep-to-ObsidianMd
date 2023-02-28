@@ -8,11 +8,11 @@ class Options {
     [Option('d', HelpText = "Destination Filepath")]
     public string? DestFilePath { get; set; }
 
-    [Option('o', HelpText = "The name of the output")]
-    public string? OutputFileName { get; set; }
+    // [Option('o', HelpText = "The name of the output")]
+    // public string? OutputFileName { get; set; }
 
-    [Option('f', "flat", Default = (bool)false, HelpText = "Whether or not the files should be stored in a folder")]
-    public bool FlatOption { get; set; }
+    // [Option('f', "flat", Default = (bool)false, HelpText = "Whether or not the files should be stored in a folder")]
+    // public bool FlatOption { get; set; }
 
     [Option('t', Default = (bool)true, HelpText = "Whether or not to include google keep tags")]
     public bool? TagsOption { get; set; }
