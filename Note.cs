@@ -5,7 +5,7 @@ using CommandLine;
 
 namespace KeepMd;
 
-public class NoteConvert
+public static class Note
 {
     public static async Task KeepHtmlToObsidianMd(
         string inputFilePath,

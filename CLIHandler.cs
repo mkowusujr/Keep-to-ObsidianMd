@@ -19,7 +19,7 @@ static class CLIHandler
         foreach (string filepath in fileEntries)
         {
             var filename = filepath.Split("\\").Last().Replace(".html", string.Empty);
-            await NoteConvert.KeepHtmlToObsidianMd(filepath, filename, options);
+            await Note.KeepHtmlToObsidianMd(filepath, filename, options);
         }
     }
 
