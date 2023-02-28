@@ -5,8 +5,17 @@ using CommandLine;
 
 namespace KeepMd;
 
+/// <summary>
+/// A class contianing convertion functions for different notes
+/// </summary>
 public static class Note
 {
+    /// <summary>
+    /// Converts a google keep archive file to html
+    /// </summary>
+    /// <param name="inputFilePath">The current file being converted</param>
+    /// <param name="fileName">The new file's name</param>
+    /// <param name="options">The CLI options object</param>
     public static async Task KeepHtmlToObsidianMd(
         string inputFilePath,
         string fileName,

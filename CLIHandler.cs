@@ -2,8 +2,15 @@ using System.IO.Compression;
 
 namespace KeepMd;
 
+/// <summary>
+/// Wrapper class to run cli convertion functions
+/// </summary>
 static class CLIHandler
 {
+    /// <summary>
+    /// Run the converter function with the input stored in the cli options
+    /// </summary>
+    /// <param name="options">The CLI options object</param>
     public static async Task HandleCLIOptions(Options options)
     {
         string targetPath = ExtractKeepZipArchieve(@$".\{options.SrcFilePath}");
@@ -23,6 +30,14 @@ static class CLIHandler
         }
     }
 
+    /// <summary>
+    /// Extracts a google keep zip file to a temporary directory.
+    /// </summary>
+    /// <param name="zipPath">The path to the zip file.</param>
+    /// <returns>
+    /// The file path to the extracted keep archive's subfolder
+    /// containing html files.
+    /// </returns>
     private static string ExtractKeepZipArchieve(string zipPath)
     {
         string extractPath = GetTemporaryDirectory();
@@ -38,6 +53,10 @@ static class CLIHandler
         return Path.Combine(extractPath, @"Takeout\Keep");
     }
 
+    /// <summary>
+    /// Creates a temporary directory.
+    /// </summary>
+    /// <returns>The filepath to the temp directory.</returns>
     private static string GetTemporaryDirectory()
     {
         string tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
