@@ -21,18 +21,18 @@ static class Program {
     static void Main (string[] args) {
         var parser = new Parser(with => with.EnableDashDash = true);
         var result = Parser.Default.ParseArguments<Options>(args);
-        
+
         result.WithParsed(options =>
         {
-            Console.WriteLine($"SrcFilepath = {options.SrcFilePath}");
-            Console.WriteLine($"Dest = {options.DestFilePath}");
-            Console.WriteLine($"Output folder name = {options.OutputFileName}");
-            Console.WriteLine($"Tags option = {options.TagsOption}");
-            Console.WriteLine($"Flat option = {options.FlatOption}");
-            Console.WriteLine($"Flat option = {options.FlatOption}");
-            Console.WriteLine($"Group by tags option = {options.GroupByTagsOption}");
+        //     Console.WriteLine($"SrcFilepath = {options.SrcFilePath}");
+        //     Console.WriteLine($"Dest = {options.DestFilePath}");
+        //     Console.WriteLine($"Output folder name = {options.OutputFileName}");
+        //     Console.WriteLine($"Tags option = {options.TagsOption}");
+        //     Console.WriteLine($"Flat option = {options.FlatOption}");
+        //     Console.WriteLine($"Flat option = {options.FlatOption}");
+        //     Console.WriteLine($"Group by tags option = {options.GroupByTagsOption}");
+            CLIHandler.HandleCLIOptions(options);
         });
-
         // run cli options
     }
 }
