@@ -86,11 +86,12 @@ public static class Note
                     Image image;
                     using (MemoryStream ms = new MemoryStream(rawImage))
                     {
+                        if (!Directory.Exists(@$"{options.DestFilePath}\media"))
+                            Directory.CreateDirectory(@$"{options.DestFilePath}\media");
+
                         image = Image.FromStream(ms);
-                        image.Save(
-                            $@"{options.DestFilePath}\{fileName}-img-{counter}.jpg"
-                        );
-                        outPutLines.Add($"![[{fileName}-img-{counter}.jpg]]");
+                        image.Save($@"{options.DestFilePath}\media\{fileName}-img-{counter}.jpg");
+                        outPutLines.Add($"\n![[{fileName}-img-{counter}.jpg]]");
                         counter++;
                     }
                 }
