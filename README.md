@@ -9,17 +9,7 @@ This only works on google keep zip archives. You can get your own google keep ar
 ```shell
 keep.md {keep-archive.zip}
 
-keep.md {keep-archive.zip} -m {store all media in subfolder called media}
-
-keep.md {keep-archive.zip} -o '{set folder name}'
-
-keep.md {keep-archive.zip} -flat # dont make folder
-
 keep.md {keep-archive.zip path} -d {destination path}
-
-keep.md {keep-archive.zip path} -nk # dont keep tags
-
-keep.md {keep-archive.zip path} -gbt # group in folders by tags
 ```
 
 # Credits

@@ -10,10 +10,4 @@ public class Options {
 
     [Option('d', HelpText = "Destination Filepath")]
     public string? DestFilePath { get; set; }
-
-    [Option('t', Default = (bool)true, HelpText = "Whether or not to include google keep tags")]
-    public bool? TagsOption { get; set; }
-
-    [Option('g', Default = (bool)false, HelpText = "Whether or not to group the files by tags into folders")]
-    public bool GroupByTagsOption { get; set; }
 }
