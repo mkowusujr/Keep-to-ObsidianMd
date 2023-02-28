@@ -7,51 +7,50 @@ namespace KeepMd;
 
 public class NoteConvert
 {
-    public static async Task KeepArchieveToObsidianMd(
+    public static async Task KeepHtmlToObsidianMd(
         string inputFilePath,
         string fileName,
         Options options
     )
     {
-        #region ReadHtml
-
+        // Read html
         string keepHtml = string.Join("", System.IO.File.ReadAllLines(inputFilePath));
-        #endregion
 
-        #region Setup angle sharp parser
+        // Setup angle sharp parser
+        #region Setup Angle Sharp
         var config = Configuration.Default;
         using var context = BrowsingContext.New(config);
         using var doc = await context.OpenAsync(req => req.Content(keepHtml));
         #endregion
 
-        #region Turn to Md
+
+        // Start convertion turn to md
+        #region Convert Keep html to Obsidian md
         List<string> outPutLines = new();
-        #endregion
 
-        #region Set title
+        // Add title if avaialbe
         if (doc?.Title != null)
-        {
             outPutLines.Add($"# {doc.Title}");
-        }
-        #endregion
 
+        // Parse main body content
         AngleSharp.Dom.IElement? noteContent = doc?.Body?.Children.First()
             .Children.First(element => element.ClassList.Contains("content"));
 
-        #region Handle br elements
+        // Convert br elements into new lines
         noteContent?.QuerySelectorAll("br").TransformElements(br => br.InnerHtml = "\n");
-        #endregion
 
-        #region Convert note content to valid markdown
+        // if file content empty store empty string
         string content = noteContent?.TextContent ?? string.Empty;
-        #endregion
 
-        #region Convert checkboxes
+        // Convert checkboxes
         content = content.Replace("☐", "\n- [ ] ").Replace("☑", "\n- [x] ").Trim();
+
+        // Store convert content to be outputted later
+        outPutLines.Add(content);
         #endregion
 
-        outPutLines.Add(content);
 
+        // Handle notes with image attachments
         #region  Handle Images
         AngleSharp.Dom.IElement? noteAttachments = doc?.Body?.Children?.First()
             ?.Children.FirstOrDefault(element => element.ClassList.Contains("attachments"));
@@ -83,9 +82,10 @@ public class NoteConvert
                 }
             }
         }
-
         #endregion
 
+
+        // Output the converted file
         #region Create file
         string outputFilePath = $@"{options.DestFilePath}\{fileName}.md";
         if (!Directory.Exists(options.DestFilePath))
