@@ -11,7 +11,14 @@ static class Program
 
         result.WithParsed(async options =>
         {
-            await CLIHandler.HandleCLIOptions(options);
+            try
+            {
+                await CLIHandler.HandleCLIOptions(options);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         });
     }
 }

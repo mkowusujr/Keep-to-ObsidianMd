@@ -41,9 +41,13 @@ public static class Note
         if (doc?.Title != null)
             outPutLines.Add($"# {doc.Title}");
 
+        // Setup note body for easy querying
+        var noteBody = doc?.Body?.Children?.First()?.Children;
+
         // Parse main body content
-        AngleSharp.Dom.IElement? noteContent = doc?.Body?.Children.First()
-            .Children.First(element => element.ClassList.Contains("content"));
+        AngleSharp.Dom.IElement? noteContent = noteBody?.First(
+            element => element.ClassList.Contains("content")
+        );
 
         // Convert br elements into new lines
         noteContent?.QuerySelectorAll("br").TransformElements(br => br.InnerHtml = "\n");
@@ -61,8 +65,9 @@ public static class Note
 
         // Handle notes with image attachments
         #region  Handle Images
-        AngleSharp.Dom.IElement? noteAttachments = doc?.Body?.Children?.First()
-            ?.Children.FirstOrDefault(element => element.ClassList.Contains("attachments"));
+        AngleSharp.Dom.IElement? noteAttachments = noteBody?.FirstOrDefault(
+            element => element.ClassList.Contains("attachments")
+        );
 
         if (noteAttachments != null)
         {
@@ -83,14 +88,31 @@ public static class Note
                     {
                         image = Image.FromStream(ms);
                         image.Save(
-                            $@"C:\Users\mokay\Source\Repos\Keep-to-ObsidianMd\output\{options.DestFilePath}\{fileName}-img{counter}.jpg"
+                            $@"{options.DestFilePath}\{fileName}-img-{counter}.jpg"
                         );
-                        outPutLines.Add($"![[{fileName}-img{counter}.jpg]]");
+                        outPutLines.Add($"![[{fileName}-img-{counter}.jpg]]");
                         counter++;
                     }
                 }
             }
         }
+        #endregion
+
+
+        // Parse tags
+        #region Handle tags
+        var tags = noteBody
+            ?.FirstOrDefault(element => element.ClassList.Contains("chips"))
+            ?.Children?.FirstOrDefault(element => element.ClassList.Contains("chip"))
+            ?.GetElementsByClassName("label-name")
+            ?.Select(element => element.InnerHtml)
+            ?.ToList();
+
+        string listOfTags = string.Empty;
+        tags?.ForEach(tag => listOfTags += ($"#{tag.Replace(" ", "-")} "));
+
+        if (!listOfTags.Equals(string.Empty))
+            outPutLines.Add($"\n{listOfTags.Trim()}");
         #endregion
 
 
